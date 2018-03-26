@@ -8,9 +8,10 @@ function Game() {
     this.depth = 6; // Profundidade da busca (escolhida por padrão como 6)
     this.score = 100000, // Win/loss score
     this.round = 0; // 0: Human, 1: Computer
+    this.plays = 0;
     this.winning_array = []; // Winning (chips) array
     this.iterations = 0; // Contador de iterações
-    
+    this.totalIterations = 0;
     that = this;
 
     that.init();
@@ -119,6 +120,8 @@ Game.prototype.generateComputerDecision = function() {
     if (that.board.score() != that.score && that.board.score() != -that.score && !that.board.isFull()) {
         that.iterations = 0; // Reset iteration count
         document.getElementById('loading').style.display = "block"; // Loading message
+        //jogadas feitas pelo computador
+        that.plays ++;
 
         // AI is thinking
         setTimeout(function() {
@@ -126,7 +129,7 @@ Game.prototype.generateComputerDecision = function() {
             var startzeit = new Date().getTime();
 
             // Chama o método que vai decidir a jogada da máquina segundo o algoritmo Minimax
-            var ai_move = that.funcaoMax(that.board, that.depth);
+            var ai_move = that.funcaoMax(that.board, that.depth);   
 	    
             // Como o fim do algoritmo, ele pega o tempo denovo e diminui dele o tempo anteriormente medido, tendo assim, o tempo que o Computador levou para pensar na jogada
             var laufzeit = new Date().getTime() - startzeit;
@@ -137,6 +140,10 @@ Game.prototype.generateComputerDecision = function() {
 
             // Debug
             document.getElementById('ai-iterations').innerHTML = that.iterations;
+            // soma interacoes para pegar o total
+            that.totalIterations += that.iterations;
+            // renderiza a media de interacoes ate o momento
+            document.getElementById('ai-totaliterations').innerHTML = Math.round(that.totalIterations / that.plays);
 
             document.getElementById('loading').style.display = "none"; // Remove loading message
         }, 100);
@@ -230,20 +237,20 @@ Game.prototype.updateStatus = function() {
     if (that.board.score() == -that.score) {
         that.status = 1;
         that.markWin();
-        alert("You have won!");
+        alert("Você ganhou! Média de interações da IA: " + Math.round(that.totalIterations/that.plays));
     }
 
     // Computer won
     if (that.board.score() == that.score) {
         that.status = 2;
         that.markWin();
-        alert("You have lost!");
+        alert("Você perdeu! Média de interações da IA: " + Math.round(that.totalIterations/that.plays));
     }
 
     // Tie
     if (that.board.isFull()) {
         that.status = 3;
-        alert("Tie!");
+        alert("Empate! Média de interações da IA: " + Math.round(that.totalIterations/that.plays));
     }
 
     var html = document.getElementById('status');
@@ -275,6 +282,8 @@ Game.prototype.restartGame = function() {
         that.depth = depth;
         that.status = 0;
         that.round = 0;
+        that.plays = 0;
+        that.totalIterations = 0;
         that.init();
         document.getElementById('ai-iterations').innerHTML = "?";
         document.getElementById('ai-time').innerHTML = "?";
