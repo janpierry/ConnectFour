@@ -9,4 +9,4 @@ Para iniciar o jogo basta entrar na pasta da versão em que deseja jogar (minima
 
 * Informações Solicitadas na Descrição do Trabalho *
 
-O tempo utilizado pelo computador para decidir a jogada, o número de iterações feitas pelo algoritmo e a média das iterações são apresentadas na interface do jogo  
+O tempo utilizado pelo computador para decidir a jogada, o número de iterações feitas pelo algoritmo e a média das iterações são apresentadas na interface do jogo.
